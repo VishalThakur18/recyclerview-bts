@@ -322,6 +322,291 @@ function MVVMInteractiveDemo() {
   )
 }
 
+{
+  /* Configuration Changes Section */
+}
+;<motion.section initial="initial" whileInView="animate" viewport={{ once: true }} variants={fadeInUp}>
+  <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">ViewModel Survives Configuration Changes</h2>
+  <ConfigurationChangeDemo />
+
+  <Card className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+    <CardContent className="p-6">
+      <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+        <Shield className="w-6 h-6 mr-2" />
+        The Lifecycle Advantage
+      </h3>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 className="font-semibold text-blue-800 mb-3">Traditional Approach Problems:</h4>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Data Loss:</strong> All UI state and loaded data is lost when the screen rotates
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Repeated Network Calls:</strong> API calls are made again, wasting bandwidth and time
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Poor UX:</strong> Users see loading screens repeatedly for the same data
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Complex State Management:</strong> Developers need to manually save/restore state
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold text-green-800 mb-3">ViewModel Solution:</h4>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Automatic Persistence:</strong> ViewModel survives configuration changes automatically
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>No Redundant Calls:</strong> Data is preserved, no need to reload from network
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Seamless Experience:</strong> UI instantly shows the same data after rotation
+              </span>
+            </li>
+            <li className="flex items-start">
+              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+              <span>
+                <strong>Zero Boilerplate:</strong> No manual state saving/restoring code needed
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+        <p className="text-sm text-gray-700">
+          <span className="font-semibold text-yellow-800">💡 Pro Tip:</span> This is one of the most compelling reasons
+          to use MVVM in Android development. Unlike MVP or MVC, where you need complex workarounds to handle
+          configuration changes, ViewModel handles this automatically and elegantly.
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+</motion.section>
+
+function ConfigurationChangeDemo() {
+  const [isRotated, setIsRotated] = useState(false)
+  const [mvpData, setMvpData] = useState("Loading...")
+  const [mvvmData, setMvvmData] = useState("User Profile Data")
+  const [rotationCount, setRotationCount] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const simulateRotation = () => {
+    setIsAnimating(true)
+    setIsRotated(!isRotated)
+    setRotationCount((prev) => prev + 1)
+
+    // Simulate MVP losing data and reloading
+    setMvpData("Loading...")
+    setTimeout(() => {
+      setMvpData("User Profile Data (Reloaded)")
+    }, 1500)
+
+    // MVVM data persists
+    setTimeout(() => {
+      setIsAnimating(false)
+    }, 800)
+  }
+
+  return (
+    <div className="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-xl p-8 text-white">
+      <div className="text-center mb-8">
+        <h3 className="text-3xl font-bold text-indigo-400 mb-4">📱 Configuration Changes Survival Test</h3>
+        <p className="text-gray-300">See how ViewModel handles screen rotation vs traditional approaches</p>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        {/* MVP Approach */}
+        <div className="bg-red-900/30 rounded-lg p-6 border border-red-500/30">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <h4 className="text-xl font-bold text-red-400">MVP/Traditional Approach</h4>
+            </div>
+            <Badge variant="outline" className="border-red-400 text-red-400">
+              Fragile
+            </Badge>
+          </div>
+
+          <div className="bg-red-900/50 rounded p-4 mb-4 min-h-[120px] flex flex-col justify-center">
+            <div className="text-center">
+              <div
+                className={`transition-all duration-500 ${isAnimating ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}
+              >
+                {mvpData === "Loading..." ? (
+                  <div className="flex items-center justify-center">
+                    <RefreshCw className="w-6 h-6 text-red-400 animate-spin mr-2" />
+                    <span className="text-red-300">Loading...</span>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-white font-medium mb-2">{mvpData}</div>
+                    <div className="text-xs text-red-300">Data reloaded {rotationCount} times</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center text-red-300">
+              <div className="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
+              Activity destroyed on rotation
+            </div>
+            <div className="flex items-center text-red-300">
+              <div className="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
+              Data lost, needs reloading
+            </div>
+            <div className="flex items-center text-red-300">
+              <div className="w-2 h-2 bg-red-400 rounded-full mr-2"></div>
+              Poor user experience
+            </div>
+          </div>
+        </div>
+
+        {/* MVVM Approach */}
+        <div className="bg-green-900/30 rounded-lg p-6 border border-green-500/30">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+              <h4 className="text-xl font-bold text-green-400">MVVM with ViewModel</h4>
+            </div>
+            <Badge variant="outline" className="border-green-400 text-green-400">
+              Robust
+            </Badge>
+          </div>
+
+          <div className="bg-green-900/50 rounded p-4 mb-4 min-h-[120px] flex flex-col justify-center">
+            <div className="text-center">
+              <div className={`transition-all duration-500 ${isAnimating ? "scale-105" : "scale-100"}`}>
+                <div className="text-white font-medium mb-2">{mvvmData}</div>
+                <div className="text-xs text-green-300">Survived {rotationCount} rotations</div>
+                <div className="flex items-center justify-center mt-2">
+                  <Shield className="w-4 h-4 text-green-400 mr-1" />
+                  <span className="text-xs text-green-300">Data preserved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center text-green-300">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              ViewModel survives rotation
+            </div>
+            <div className="flex items-center text-green-300">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              Data automatically preserved
+            </div>
+            <div className="flex items-center text-green-300">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              Seamless user experience
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Phone Rotation Simulator */}
+      <div className="text-center mb-8">
+        <div className="inline-block relative">
+          <motion.div
+            animate={{
+              rotateZ: isRotated ? 90 : 0,
+              scale: isAnimating ? 0.9 : 1,
+            }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="w-32 h-56 bg-gray-800 rounded-2xl border-4 border-gray-600 flex items-center justify-center relative overflow-hidden"
+          >
+            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-600 rounded-full"></div>
+            <div className="text-white text-xs text-center px-2">
+              <div className="mb-2">📱</div>
+              <div>Screen</div>
+              <div>{isRotated ? "Landscape" : "Portrait"}</div>
+            </div>
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gray-700 rounded-full"></div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="text-center">
+        <button
+          onClick={simulateRotation}
+          disabled={isAnimating}
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-800 text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto"
+        >
+          {isAnimating ? (
+            <>
+              <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+              Rotating...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="w-5 h-5 mr-2" />
+              Simulate Screen Rotation
+            </>
+          )}
+        </button>
+
+        <div className="mt-4 text-sm text-gray-300">
+          Rotations performed: <span className="font-bold text-indigo-400">{rotationCount}</span>
+        </div>
+      </div>
+
+      <div className="mt-8 bg-indigo-900/30 rounded-lg p-6 border border-indigo-500/30">
+        <h4 className="font-bold text-indigo-300 mb-3 flex items-center">
+          <Lightbulb className="w-5 h-5 mr-2" />
+          Why This Matters
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-300">
+          <div>
+            <h5 className="font-semibold text-white mb-2">Without ViewModel:</h5>
+            <ul className="space-y-1">
+              <li>• Activity recreated on rotation</li>
+              <li>• All data lost</li>
+              <li>• Network calls repeated</li>
+              <li>• Loading states shown again</li>
+              <li>• Poor user experience</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-white mb-2">With ViewModel:</h5>
+            <ul className="space-y-1">
+              <li>• ViewModel survives configuration changes</li>
+              <li>• Data automatically preserved</li>
+              <li>• No unnecessary network calls</li>
+              <li>• Instant UI restoration</li>
+              <li>• Smooth user experience</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ArchitectureComparison() {
   const [selectedPattern, setSelectedPattern] = useState("MVVM")
 
@@ -343,9 +628,16 @@ function ArchitectureComparison() {
     MVVM: {
       name: "MVVM (Model-View-ViewModel)",
       color: "bg-green-500",
-      pros: ["Lifecycle-aware", "Loose coupling", "Excellent testability", "Reactive updates"],
+      pros: [
+        "Lifecycle-aware",
+        "Survives configuration changes",
+        "Loose coupling",
+        "Excellent testability",
+        "Reactive updates",
+      ],
       cons: ["Learning curve", "Can be overkill for simple apps", "Requires understanding of observables"],
-      description: "ViewModel exposes observable data that View can subscribe to",
+      description:
+        "ViewModel exposes observable data that View can subscribe to and survives configuration changes automatically",
     },
   }
 
